@@ -8,7 +8,7 @@ public class DishCategory
     /// <summary>
     /// Идентификатор категории.
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Название категории.
