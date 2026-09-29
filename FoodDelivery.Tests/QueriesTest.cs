@@ -7,10 +7,8 @@ public class QueriesTest
     [Fact]
     public void Top5RestaurantsByOrderCount()
     {
-        // Arrange
         var fixture = new QueriesTestFixture();
 
-        // Act
         var result = fixture.Orders
             .GroupBy(order => order.Restaurant)
             .Select(group => new
@@ -23,7 +21,6 @@ public class QueriesTest
             .Take(5)
             .ToList();
 
-        // Assert
         Assert.Equal(5, result.Count);
 
         Assert.Equal("Вкусно и точка", result[0].Restaurant.Name);
@@ -40,10 +37,8 @@ public class QueriesTest
     [Fact]
     public void OrdersWithMinimumDeliveryTime()
     {
-        // Arrange
         var fixture = new QueriesTestFixture();
 
-        // Act
         var minimumDeliveryTime = fixture.Orders
             .Min(order => order.DeliveryTime - order.OrderTime);
 
@@ -51,7 +46,6 @@ public class QueriesTest
             .Where(order => order.DeliveryTime - order.OrderTime == minimumDeliveryTime)
             .ToList();
 
-        // Assert
         Assert.Single(result);
 
         Assert.Equal(11, result[0].Id);
@@ -61,11 +55,9 @@ public class QueriesTest
     [Fact]
     public void ClientsWhoOrderedFromSelectedRestaurant()
     {
-        // Arrange
         var fixture = new QueriesTestFixture();
         var selectedRestaurantId = 1;
 
-        // Act
         var result = fixture.Orders
             .Where(order => order.RestaurantId == selectedRestaurantId)
             .Select(order => order.Client!)
@@ -73,7 +65,6 @@ public class QueriesTest
             .OrderBy(client => client.FullName)
             .ToList();
 
-        // Assert
         Assert.Equal(2, result.Count);
 
         Assert.Equal("Зубенко Михаил Петрович", result[0].FullName);
@@ -83,13 +74,11 @@ public class QueriesTest
     [Fact]
     public void CategorySummaryForSpecifiedPeriod()
     {
-        // Arrange
         var fixture = new QueriesTestFixture();
 
         var startDate = new DateTime(2026, 9, 1);
         var endDate = new DateTime(2026, 9, 5);
 
-        // Act
         var result = fixture.Orders
             .Where(order => order.OrderTime >= startDate &&
                             order.OrderTime < endDate)
@@ -119,7 +108,6 @@ public class QueriesTest
             .OrderBy(x => x.Category.Id)
             .ToList();
 
-        // Assert
         Assert.Equal(8, result.Count);
 
         var pizza = result.Single(x => x.Category.Id == 1);
@@ -133,10 +121,8 @@ public class QueriesTest
     [Fact]
     public void ClientWhoSpentTheMost()
     {
-        // Arrange
         var fixture = new QueriesTestFixture();
 
-        // Act
         var result = fixture.Orders
             .GroupBy(order => order.ClientId)
             .Select(group => new
@@ -147,7 +133,6 @@ public class QueriesTest
             .OrderByDescending(x => x.TotalSpent)
             .First();
 
-        // Assert
         Assert.Equal("Иванов Иван Иванович", result.Client.FullName);
         Assert.Equal(2990m, result.TotalSpent);
     }
