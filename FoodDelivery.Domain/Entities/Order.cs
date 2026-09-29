@@ -8,12 +8,12 @@ public class Order
     /// <summary>
     /// Идентификатор заказа.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// Идентификатор клиента.
     /// </summary>
-    public int ClientId { get; set; }
+    public required int ClientId { get; set; }
 
     /// <summary>
     /// Клиент, оформивший заказ.
@@ -23,7 +23,7 @@ public class Order
     /// <summary>
     /// Идентификатор ресторана.
     /// </summary>
-    public int RestaurantId { get; set; }
+    public required int RestaurantId { get; set; }
 
     /// <summary>
     /// Ресторан, в котором оформлен заказ.
@@ -38,7 +38,7 @@ public class Order
     /// <summary>
     /// Время доставки заказа.
     /// </summary>
-    public DateTime? DeliveryTime { get; set; }
+    public required DateTime DeliveryTime { get; set; }
 
     /// <summary>
     /// Итоговая стоимость заказа.
@@ -48,5 +48,5 @@ public class Order
     /// <summary>
     /// Список блюд в заказе.
     /// </summary>
-    public List<Dish> Dishes { get; set; } = [];
+    public required List<Dish> Dishes { get; set; }
 }
