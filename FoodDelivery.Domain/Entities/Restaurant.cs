@@ -8,7 +8,7 @@ public class Restaurant
     /// <summary>
     /// Идентификатор ресторана.
     /// </summary>
-    public required int Id { get; set; }
+    public int Id { get; set; }
 
     /// <summary>
     /// Название ресторана.
