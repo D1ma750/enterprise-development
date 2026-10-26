@@ -3,7 +3,7 @@
 /// <summary>
 /// Заказ клиента.
 /// </summary>
-public class Order
+public class Order : IEntity
 {
     /// <summary>
     /// Идентификатор заказа.

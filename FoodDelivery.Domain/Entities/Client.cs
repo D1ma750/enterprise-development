@@ -3,7 +3,7 @@
 /// <summary>
 /// Клиент службы доставки еды.
 /// </summary>
-public class Client
+public class Client : IEntity
 {
     /// <summary>
     /// Идентификатор клиента.

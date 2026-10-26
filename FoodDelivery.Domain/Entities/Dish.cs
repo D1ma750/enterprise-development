@@ -3,7 +3,7 @@
 /// <summary>
 /// Блюдо ресторана.
 /// </summary>
-public class Dish
+public class Dish : IEntity
 {
     /// <summary>
     /// Идентификатор блюда.

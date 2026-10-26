@@ -3,14 +3,9 @@
 /// <summary>
 /// Тесты аналитических запросов к данным службы доставки еды.
 /// </summary>
-public class QueriesTest : IClassFixture<QueriesTestFixture>
+public class QueriesTest(
+    QueriesTestFixture fixture) : IClassFixture<QueriesTestFixture>
 {
-    private readonly QueriesTestFixture _fixture;
-
-    public QueriesTest(QueriesTestFixture fixture)
-    {
-        _fixture = fixture;
-    }
 
     /// <summary>
     /// Проверяет получение пяти ресторанов с наибольшим количеством заказов.
@@ -33,7 +28,7 @@ public class QueriesTest : IClassFixture<QueriesTestFixture>
             2
         };
 
-        var result = _fixture.Orders
+        var result = fixture.Orders
             .GroupBy(order => order.Restaurant)
             .Select(group => new
             {
@@ -67,7 +62,7 @@ public class QueriesTest : IClassFixture<QueriesTestFixture>
         var expectedOrderId = 11;
         var expectedDeliveryTime = TimeSpan.FromMinutes(25);
 
-        var deliveredOrders = _fixture.Orders
+        var deliveredOrders = fixture.Orders
             .Where(order => order.DeliveryTime.HasValue)
             .ToList();
 
@@ -100,7 +95,7 @@ public class QueriesTest : IClassFixture<QueriesTestFixture>
             "Петушков Илья Викторович"
         };
 
-        var result = _fixture.Orders
+        var result = fixture.Orders
             .Where(order => order.RestaurantId == selectedRestaurantId)
             .Select(order => order.Client!)
             .DistinctBy(client => client.Id)
@@ -128,7 +123,7 @@ public class QueriesTest : IClassFixture<QueriesTestFixture>
         var expectedAverageOrderPrice = 760m;
         var expectedTotalOrderPrice = 1520m;
 
-        var result = _fixture.Orders
+        var result = fixture.Orders
             .Where(order => order.OrderTime >= startDate &&
                             order.OrderTime < endDate)
             .SelectMany(order => order.Dishes
@@ -177,11 +172,11 @@ public class QueriesTest : IClassFixture<QueriesTestFixture>
         var expectedClientName = "Иванов Иван Иванович";
         var expectedTotalSpent = 2990m;
 
-        var clientSpending = _fixture.Orders
+        var clientSpending = fixture.Orders
             .GroupBy(order => order.ClientId)
             .Select(group => new
             {
-                Client = _fixture.Clients
+                Client = fixture.Clients
                     .Single(client => client.Id == group.Key),
                 TotalSpent = group.Sum(order => order.TotalPrice)
             })

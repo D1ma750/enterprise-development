@@ -3,7 +3,7 @@
 /// <summary>
 /// Категория блюда.
 /// </summary>
-public class DishCategory
+public class DishCategory : IEntity
 {
     /// <summary>
     /// Идентификатор категории.

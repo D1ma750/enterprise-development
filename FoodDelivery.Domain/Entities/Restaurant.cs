@@ -3,7 +3,7 @@
 /// <summary>
 /// Ресторан службы доставки еды.
 /// </summary>
-public class Restaurant
+public class Restaurant : IEntity
 {
     /// <summary>
     /// Идентификатор ресторана.
