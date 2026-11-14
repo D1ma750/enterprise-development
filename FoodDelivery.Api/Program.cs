@@ -1,29 +1,20 @@
 using FoodDelivery.Application.Services;
-using FoodDelivery.Domain.Data;
-using FoodDelivery.Domain.Entities;
 using FoodDelivery.Domain.Repositories;
+using FoodDelivery.Infrastructure.Data;
 using FoodDelivery.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+builder.AddNpgsqlDbContext<FoodDeliveryDbContext>("fooddeliverydb");
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// Контекст с данными
-builder.Services.AddSingleton(DataSeeder.Seed());
-
-// Обобщённые репозитории
-builder.Services.AddSingleton<IRepository<Client>>(sp =>
-    new InMemoryRepository<Client>(sp.GetRequiredService<FoodDeliveryContext>().Clients));
-builder.Services.AddSingleton<IRepository<Restaurant>>(sp =>
-    new InMemoryRepository<Restaurant>(sp.GetRequiredService<FoodDeliveryContext>().Restaurants));
-builder.Services.AddSingleton<IRepository<DishCategory>>(sp =>
-    new InMemoryRepository<DishCategory>(sp.GetRequiredService<FoodDeliveryContext>().Categories));
-builder.Services.AddSingleton<IRepository<Dish>>(sp =>
-    new InMemoryRepository<Dish>(sp.GetRequiredService<FoodDeliveryContext>().Dishes));
-builder.Services.AddSingleton<IRepository<Order>>(sp =>
-    new InMemoryRepository<Order>(sp.GetRequiredService<FoodDeliveryContext>().Orders));
+// Обобщённые репозитории поверх EF Core
+builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 
 // Сервисы бизнес-логики
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
@@ -35,8 +26,14 @@ builder.Services.AddScoped<IDishService, DishService>();
 
 var app = builder.Build();
 
+app.MapDefaultEndpoints();
+
 if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<FoodDeliveryDbContext>();
+    await dbContext.Database.MigrateAsync();
+
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
@@ -47,5 +44,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
